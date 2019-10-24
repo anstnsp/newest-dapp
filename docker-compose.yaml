@@ -1,0 +1,52 @@
+version: "3"  # Version of YAML file format 
+
+# services:
+#   nodejs-dapp-server:         #서비스이름       # Service 1: API Server
+#    # build: ./Dockerfile      # Build image from api-node directory
+#     container_name: nodejs-dapp-server #컨테이너 이름
+#     image: anstnsp/fabric-dapp   #이미지명 (내가만든거)
+#     #environment:  #환경변수
+#     logging:
+#       driver: syslog
+#       options:
+#         #syslog-address: "tcp://10.0.2.15:514"
+#         syslog-address: "tcp://10.0.2.15:514" #로그를 보낼 ip주소 및 포트 
+#         syslog-facility: local0   #로그생성서비스(facility)
+#         tag: "{{.Name}}" #컨테이너명,참고사이트 : https://docs.docker.com/config/containers/logging/log_tags/
+#         #max-size: #최대파일크기
+#         #max-file: #최대파일갯수
+#     working_dir: /app
+#     command: npm start
+#     volumes:               # For executing live code change
+#     - ./volumelogtest:/app/logtest
+#     ports:                 # Expose host port 3000
+#       - 1111:8888           
+networks:
+  hcc:
+    external:
+      name: net-bridge_hcc
+services:
+  dapp.orghcc.com:
+    #image: node:8
+    #image: fabric-dapp
+    image: test-dapp
+   # restart: always
+    container_name: dapp.orghcc.com
+    environment:
+       - TZ=Asia/Seoul  #docker내부 시간을 host와 맞추기 위해 
+    ports:
+      - 1111:8888
+    working_dir: /opt/DApp
+#    command: pm2-runtime app.js -i 4
+    command: node app.js
+    volumes:
+      - ./:/opt/DApp
+      - ../DAppLog:/opt/DAppLog
+      - ../checkpoint:/opt/checkpoint
+      - ./.env-local:/opt/DApp/.env-local
+      - ./.env-prod:/opt/DApp/.env-prod
+      - ./.env-dev:/opt/DApp/.env-dev
+      - /etc/localtime:/etc/localtime:ro #docker내부 시간을 host와 맞추기 위해 
+
+    networks:
+      hcc:

@@ -1,0 +1,44 @@
+version: "3"  # Version of YAML file format 
+
+services:
+  nodejs-dapp-server:         #서비스이름       # Service 1: API Server
+   # build: ./Dockerfile      # Build image from api-node directory
+    container_name: nodejs-dapp-server #컨테이너 이름
+    image: anstnsp/fabric-dapp   #이미지명 (내가만든거)
+    #environment:  #환경변수
+    logging:
+      driver: syslog
+      options:
+        #syslog-address: "tcp://10.0.2.15:514"
+        syslog-address: "tcp://10.0.2.15:514" #로그를 보낼 ip주소 및 포트 
+        syslog-facility: local0   #로그생성서비스(facility)
+        tag: "{{.Name}}" #컨테이너명,참고사이트 : https://docs.docker.com/config/containers/logging/log_tags/
+        #max-size: #최대파일크기
+        #max-file: #최대파일갯수
+    working_dir: /app
+    command: npm start
+    volumes:               # For executing live code change
+    - ./volumelogtest:/app/logtest
+    ports:                 # Expose host port 3000
+      - 1111:8888           
+
+
+
+networks:
+  default:
+    external:
+      name: net_byfn
+
+services:
+  dapp.orghcc.com:
+    container_name: dapp.orghcc.com
+    image: repo.hcdd.kr/mpmbc/node:8.16.0-alpine
+    ports:
+      - 8888:8888
+    command: npm start
+    volumes:
+      - ${DAPP_SRC}:/opt/DApp
+      - ${CERT_PATH}:/opt/crypto-config
+    networks:
+      - default 
+      

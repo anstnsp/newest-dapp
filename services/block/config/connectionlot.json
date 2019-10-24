@@ -1,0 +1,104 @@
+{
+    "name": "hcc-network",
+    "version": "1.0.0",
+    "adminUser": "admin",
+    "client": {
+        "organization": ["lot"],
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                },
+                "orderer": "300"
+            }
+        }
+    },
+    "channels": {
+        "hcc-channel": {
+            "orderers": [
+                "orderer.orgorderer.com"
+            ],
+            "chaincodes": [{ "name": "hcc-cc", "collection_names": ["collectionHcc"] }],
+            "peers": {
+                "peer0.orglot.com": {
+                    "endorsingPeer": true,
+					"chaincodeQuery": true,
+					"ledgerQuery": true,
+                    "eventSource": true
+                },
+                "peer1.orglot.com": {
+                    "endorsingPeer": true,
+					"chaincodeQuery": true,
+					"ledgerQuery": true,
+					"eventSource": true
+                }
+            }
+        }
+    },
+    "organizations": {
+        "lot": {
+            "mspid": "lotMSP",
+            "peers": [
+                "peer0.orglot.com",
+                "peer1.orglot.com"
+            ],
+            "certificateAuthorities": [
+                "ca.orglot.com"
+            ]
+        }
+    },
+    "orderers": {
+        "orderer.orgorderer.com": {
+            "url": "grpcs://10.0.2.15:7050",
+	        "tlsCACerts": {
+                "path": "services/block/wallet/pem-store/orgorderer/tlsca.orgorderer.com-cert.pem"
+              
+	        },
+	        "grpcOptions": {
+                 "ssl-target-name-override": "orderer.orgorderer.com" 
+             }
+        }
+    },
+    "peers": {
+        "peer0.orglot.com": {
+            "url": "grpcs://10.0.2.15:9051",
+	        "tlsCACerts": {
+            "path": "services/block/wallet/pem-store/orglot/peer0.orglot/tlsca.orglot.com-cert.pem"
+            },
+           "grpcOptions": {
+                "ssl-target-name-override": "peer0.orglot.com",
+                "request-timeout": 120001
+	        }
+        },
+        "peer1.orglot.com": {
+            "url": "grpcs://10.0.2.15:10051",
+	        "tlsCACerts": {
+            "path": "services/block/wallet/pem-store/orglot/peer1.orglot/tlsca.orglot.com-cert.pem"
+      
+            },
+           "grpcOptions": {
+                "ssl-target-name-override": "peer1.orglot.com",
+                "request-timeout": 120001
+	        }
+        }
+    },
+    "certificateAuthorities": {
+        "ca.orglot.com": {
+            "url": "https://10.0.2.15:27054",
+            "caName": "ca.orglot.com",
+	        "tlsCACerts": {
+		        "path": "services/block/wallet/pem-store/ca.orglot.com-cert.pem"
+            },
+	        "httpOptions": {
+		        "verify": false
+            },
+            "registrar": [
+				{
+					"enrollId": "admin",
+					"enrollSecret": "adminpw"
+				}
+			]
+        }
+    }
+         
+}

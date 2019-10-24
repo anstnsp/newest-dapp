@@ -1,0 +1,41 @@
+{
+  "name": "hcc-server",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "scripts": {
+    "test": "mocha",
+    "start": "node app.js"
+  },
+  "keywords": [
+    "fabric",
+    "hyperledger-fabric",
+    "hyperledger"
+  ],
+  "author": {
+    "name": "MunSu Kim",
+    "email": "anstnsp@naver.com"
+  },
+  "license": "ISC",
+  "dependencies": {
+    "body-parser": "^1.19.0",
+    "dateformat": "^3.0.3",
+    "dotenv": "^8.0.0",
+    "express": "^4.17.1",
+    "fabric-ca-client": "=1.4.1",
+    "fabric-client": "^1.4.1",
+    "fabric-network": "^1.4.4",
+    "forever": "^1.0.0",
+    "is-port-reachable": "^2.0.1",
+    "log4js": "^5.2.2",
+    "moment": "^2.24.0",
+    "mongoose": "^5.5.13",
+    "nodemon": "^1.19.1",
+    "pm2": "^3.5.1",
+    "request": "^2.88.0",
+    "util": "^0.12.0",
+    "uuid": "^3.3.3",
+    "winston": "^3.2.1",
+    "winston-daily-rotate-file": "^3.9.0"
+  }
+}

@@ -1,0 +1,104 @@
+{
+    "name": "hcc-network",
+    "version": "1.0.0",
+    "adminUser": "admin",
+    "client": {
+        "organization": "swt",
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300"
+                },
+                "orderer": "300"
+            }
+        }
+    },
+    "channels": {
+        "hcc-channel": {
+            "orderers": [
+                "orderer.orgorderer.com"
+            ],
+            "peers": {
+                "peer0.orgswt.com": {
+                    "endorsingPeer": true,
+					"chaincodeQuery": true,
+					"ledgerQuery": true,
+                    "eventSource": true
+                },
+                "peer1.orgswt.com": {
+                    "endorsingPeer": true,
+					"chaincodeQuery": true,
+					"ledgerQuery": true,
+					"eventSource": true
+                }
+            }
+        }
+    },
+    "organizations": {
+        "swt": {
+            "mspid": "swtMSP",
+            "peers": [
+                "peer0.orgswt.com",
+                "peer1.orgswt.com"
+            ],
+            "certificateAuthorities": [
+                "ca.orgswt.com"
+            ]
+        }
+    },
+    "orderers": {
+        "orderer.orgorderer.com": {
+            "url": "grpcs://10.0.2.15:7050",
+	        "tlsCACerts": {
+                "path": "services/block/wallet/pem-store/orgorderer/tlsca.orgorderer.com-cert.pem"
+	        },
+	        "grpcOptions": {
+                 "ssl-target-name-override": "orderer.orgorderer.com"
+             }
+        }
+    },
+    "peers": {
+        "peer0.orgswt.com": {
+            "url": "grpcs://10.0.2.15:11051",
+	        "tlsCACerts": {
+            "path": "services/block/wallet/pem-store/orgswt/peer0.orgswt/tlsca.orgswt.com-cert.pem"
+ 
+            },
+           "grpcOptions": {
+                "ssl-target-name-override": "peer0.orgswt.com",
+                "request-timeout": 120001
+	        }
+        },
+        "peer1.orgswt.com": {
+            "url": "grpcs://10.0.2.15:12051",
+	        "tlsCACerts": {
+            "path": "services/block/wallet/pem-store/orgswt/peer1.orgswt/tlsca.orgswt.com-cert.pem"
+         
+            },
+           "grpcOptions": {
+                "ssl-target-name-override": "peer1.orgswt.com",
+                "request-timeout": 120001
+	        }
+        }
+
+    },
+    "certificateAuthorities": {
+        "ca.orgswt.com": {
+            "url": "https://10.0.2.15:37054",
+            "caName": "ca.orgswt.com",
+	        "tlsCACerts": {
+		        "path": "services/block/wallet/pem-store/ca.orgswt.com-cert.pem"
+            },
+	        "httpOptions": {
+		        "verify": false
+            },
+            "registrar": [
+				{
+					"enrollId": "admin",
+					"enrollSecret": "adminpw"
+				}
+			]
+        }
+    }
+         
+}

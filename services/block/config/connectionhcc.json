@@ -1,0 +1,114 @@
+{
+    "name": "hcc-network",
+    "version": "1.0.0",
+    "adminUser": "admin",
+    "client": {
+        "organization": ["hcc"],
+        "connection": {
+            "timeout": {
+                "peer": {
+                    "endorser": "300",
+                    "eventHub": "120",
+                    "eventReg": "5"
+                },
+                "orderer": "300"
+            }
+        }
+    },
+    "channels": {
+        "hcc-channel": {
+            "orderers": [
+                "orderer.orgorderer.com"
+            ],
+
+            "chaincodes": [{ "name": "hcc-cc-many", "collection_names": ["collectionPersonalInfo"] }],
+            "peers": {
+                "peer0.orghcc.com": {
+                    "endorsingPeer": true,
+					"chaincodeQuery": true,
+					"ledgerQuery": true,
+                    "eventSource": true
+                },
+                "peer1.orghcc.com": {
+                    "endorsingPeer": true,
+					"chaincodeQuery": true,
+					"ledgerQuery": true,
+					"eventSource": true
+                }
+            }
+        }
+    },
+    
+    "organizations": {
+        "hcc": {
+            "mspid": "hccMSP",
+            "peers": [
+                "peer0.orghcc.com",
+                "peer1.orghcc.com"
+            ],
+            "certificateAuthorities": [
+                "ca.orghcc.com"
+            ],
+            "adminPrivateKey": {
+				"path": "services/block/wallet/pem-store/orghcc/6b0c2ca2afad8899e34957147eb57a44c0b30f535ccb1a704478a8241774d3eb_sk"
+			},
+			"signedCert": {
+				"path": "services/block/wallet/pem-store/orghcc/Admin@orghcc.com-cert.pem"
+			}
+        }
+    },
+    "orderers": {
+        "orderer.orgorderer.com": {
+            "url": "grpcs://10.0.2.15:7050",
+	        "tlsCACerts": {
+                "path": "services/block/wallet/pem-store/orgorderer/tlsca.orgorderer.com-cert.pem"
+              
+	        },
+	        "grpcOptions": {
+                 "ssl-target-name-override": "orderer.orgorderer.com"
+             }
+        }
+    },
+    "peers": {
+        "peer0.orghcc.com": {
+            "url": "grpcs://10.0.2.15:7051",
+	        "tlsCACerts": {
+                "path": "services/block/wallet/pem-store/orghcc/peer0.orghcc/tlsca.orghcc.com-cert.pem"
+            },
+	        "grpcOptions": {
+            "ssl-target-name-override": "peer0.orghcc.com",
+            "request-timeout": 120001
+	        }
+        },
+        "peer1.orghcc.com": {
+            "url": "grpcs://10.0.2.15:8051",
+	        "tlsCACerts": {
+                "path": "services/block/wallet/pem-store/orghcc/peer1.orghcc/tlsca.orghcc.com-cert.pem"
+            },
+           "grpcOptions": {
+                "ssl-target-name-override": "peer1.orghcc.com",
+                "request-timeout": 120001
+	        }
+        }
+
+    },
+    "certificateAuthorities": {
+        "ca.orghcc.com": {
+            "url": "https://10.0.2.15:17054",
+            "caName": "ca.orghcc.com",
+	        "tlsCACerts": {
+		        "path": "services/block/wallet/pem-store/orghcc/peer1.orghcc/tlsca.orghcc.com-cert.pem"
+            },
+	        "httpOptions": {
+		        "verify": false
+            },
+            "registrar": [
+				{
+					"enrollId": "admin",
+					"enrollSecret": "adminpw"
+				}
+			]
+        }
+    }
+         
+}
