@@ -254,7 +254,7 @@ exports.update_item = async (req, res, next) => {
 
 }
 
-exports.common_insert_update = (req, res) => {
+exports.common_insert_update = async (req, res) => {
 
     // req.body.fn = req.fn;
     const params = { 
@@ -262,52 +262,37 @@ exports.common_insert_update = (req, res) => {
         pub : req.body.pub,
         priv : req.body.priv
     }
-    service.block_create_service(params, (blockCreateError, data) => {
-        if(blockCreateError) { 
-            if(blockCreateError.code) {
-                logger.error("error code(%s), msg(%s)", blockCreateError.code, blockCreateError.msg);
-                return getResponseWithExternalCode(res, blockCreateError.code, blockCreateError.msg);
-            } else {
-                return getResponse(res, resultCode.FABRIC_INVOKE_ERROR);
-            }
-        } else {
-            return getResponse(res, resultCode.SUCCESS);
-        }
-    });
+    
+    try {
+        const createResult = await service.block_create_service(params); 
+        return getResponse(res, resultCode.SUCCESS);
+    } catch(error) {
+        logger.error(`invoke중 에러발생:${error}`); 
+        return getResponse(res, resultCode.FABRIC_INVOKE_ERROR);
+    }
 
 }
 
-exports.common_query = (req, res) => {
+exports.common_query = async (req, res) => {
 
     let params = {
         refundNumber : req.query.params, //주문번호
         // column_value : req.query,            //rich query용 컬럼과 값 
         fn : req.fn                          //호출할체인코드명
     }
-    service.block_search_service(params, (blockSearchError,data) => {
-        logger.info('block search error: %s', blockSearchError !== null)
-
-        if(blockSearchError) {
-            if(blockSearchError.code) {
-                logger.error("error code(%s), msg(%s)", blockSearchError.code, blockSearchError.msg);
-                return getResponseWithExternalCode(res, blockSearchError.code,blockSearchError.msg);
-            } else {
-                return getResponse(res, resultCode.FABRIC_QUERY_ERROR);
-            }
-        } else {
-            logger.debug('response data : %s', JSON.stringify(data));
-            return getResponse(res, resultCode.SUCCESS, data);
-        }
-    });
+    try {
+        const searchResult = await service.block_search_service(params); 
+        return getResponse(res, resultCode.SUCCESS, searchResult);
+    } catch(error) {
+        logger.error(`쿼리중 에러발생:${error}`)
+        return getResponse(res, resultCode.FABRIC_QUERY_ERROR); 
+    }
 
 }
 
 //해당 object타입 체크 
 function typeOf(object) {
 
-    // console.log('##############################')
-    // console.log('object:'+object)
-    // console.log('##############################')
     var firstVal = typeof object;
     if (firstVal !== 'object') {
         return firstVal;
@@ -328,11 +313,11 @@ function typeOf(object) {
 
 function checkParamsValidation(pubData, privData) {
     return new Promise((resolve, reject) => {
-        let map = new Map(); 
-        for(let i=0; i<pubData.length; i++) {
-            map.set(pubData[i].refundNumber, 'a');
-        }
-        if(map.size !== pubData.length) reject(resultCode.DUPLICATE_KEY);
+        // let map = new Map(); 
+        // for(let i=0; i<pubData.length; i++) {
+        //     map.set(pubData[i].refundNumber, 'a');
+        // }
+        // if(map.size !== pubData.length) reject(resultCode.DUPLICATE_KEY);
         //public데이터만 처리해야할 경우
         // console.log('여기는 함수 처음부분!!!!!!!!!!!!!!!!!!!!!!')
         if(!privData) {
@@ -386,6 +371,11 @@ function checkParamsValidation(pubData, privData) {
                     reject(resultCode.REQUIRED_PARAMETER)  
                 }
             }
+            let map = new Map(); 
+            for(let i=0; i<pubData.length; i++) {
+                map.set(pubData[i].refundNumber, 'a');
+            }
+            if(map.size !== pubData.length) reject(resultCode.DUPLICATE_KEY);
             resolve(0);
         }
     });

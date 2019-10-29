@@ -8,19 +8,17 @@ const logger = require('log4js').getLogger('services')
  * @param {*} param json 형식 파라미터
  * @param {*} callback 콜백함수 (status, output) =>{..}
  */
-exports.block_search_service = (params,callback) => {
+exports.block_search_service = async (params) => {
     
     logger.debug("search refundNumber: %s, query in : %s ", params, JSON.stringify(params));
 
-    fabric_query.query(params, (err, data)=>{
-        if(err){
-            logger.error("fabric search error : %s", JSON.stringify(err));
-            callback(err, null)
-        } else{
-            logger.debug("query out : %s ", data);
-            callback(null, JSON.parse(data));
-        }
-    });
+    try {
+        const queryResult = await fabric_query.query(params);
+        return Promise.resolve(JSON.parse(queryResult))
+    } catch(error) {
+        logger.error("fabric search error : %s", JSON.stringify(error));
+        return Promise.reject(error); 
+    }
       
 }
 
@@ -34,18 +32,17 @@ exports.block_search_service = (params,callback) => {
  * coCd          (기관코드)
  * @param {*} callback 콜백함수 (status, output) =>{..}
  */
-exports.block_create_service = (params, callback) => {
+exports.block_create_service = async (params) => {
 
     logger.debug('invoke in : %s', JSON.stringify(params));
     
-    fabric_invoke.invoke(params, (err, output)=>{
-        if(err){
-            logger.error("invoke error : %s", JSON.stringify(err));
-            callback(err, 'fabric invoke error');
-        } else{
-            logger.debug("invoke out : %s" , JSON.stringify(output));
-            callback(null, null);
-        }
-    });  
+    try {
+        const invokeResult = await fabric_invoke.invoke(params);
+        logger.debug("invoke out : %s" , JSON.stringify(invokeResult));
+        return Promise.resolve(null); 
+    } catch(error) {
+        logger.error("invoke error : %s", JSON.stringify(error));
+        return Promise.reject(JSON.stringify(error)); 
+    }
 
 }

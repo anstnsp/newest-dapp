@@ -6,7 +6,6 @@
 
 
 
-// const logger        = require('../../utils/logger').logger;
 const logger = require('log4js').getLogger('query')
 const helper        = require('./helper.js');
 const resultCode    = require('../../resultCode')
@@ -16,7 +15,7 @@ let obj;
  * @param {*} param json 형식의 파라미터
  * @param {*} callback 콜백함수 (status, output) =>{..}
  */
-exports.query = async function (args, callback) {
+exports.query = async function (args) {
     
     let result ='';
 
@@ -58,8 +57,8 @@ exports.query = async function (args, callback) {
         
           logger.info(`Transaction has been evaluated`);
           logger.debug('result.toString():'+ result.toString());
-
-          callback(null, result.toString());
+          return Promise.resolve(result.toString());
+          // callback(null, result.toString());
     } catch (err) {
           logger.error(`Failed to evaluate transaction: ${err}`);
           logger.error(`Failed to evaluate transaction: ${err.message}`);
@@ -75,8 +74,8 @@ exports.query = async function (args, callback) {
             error.code = resultCode.FABRIC_ETC_ERROR.code;
             error.msg = resultCode.FABRIC_ETC_ERROR.message;
           }
-          
-          callback(error, null);
+          return Promise.reject(error);
+          // callback(error, null);
      } 
 
 }

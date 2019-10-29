@@ -4,18 +4,17 @@
 
 'use strict';
 
-// const logger        = require('../../utils/logger').logger;
+
 const logger = require('log4js').getLogger('invoke');
 const helper        = require('./helper.js');
-// const addContractListener = require('./addContractListener');
-let obj;
+
 /**
  * 환불상품 블록체인등록
  * 
  * @param {*} param json형식 파라미터
  * @param {*} callback 콜백함수 (status, output) =>{..}
  */
-exports.invoke = async function (args, callback) {
+exports.invoke = async function (args) {
   
     const returnData = args;
     let transientData;
@@ -38,7 +37,8 @@ exports.invoke = async function (args, callback) {
         await helper.submitTransaction(args.fn, pub, transientData)
         if(args.fn === 'cancelRefund') await helper.deleteUserData(pub);
         logger.info('Transaction has been submitted');
-        callback(null, returnData)
+        return Promise.resolve(returnData);
+     
         //obj = await helper.get_contract();
         // if(args.fn === 'completeRefund' || args.fn === 'registerComplaint' || args.fn === 'confirmReturnItem') {
         //     transaction = await obj.contract.createTransaction(args.fn)
@@ -73,27 +73,6 @@ exports.invoke = async function (args, callback) {
         };
         //if(err.endorsements) [error.code, error.msg] = helper.setErrorMsg(err.endorsements);
         [error.code, error.msg] = helper.setErrorMsg(err.message);
-        callback(error, null);
-        
+        return Promise.reject(error); 
      } 
 }
-
-
-// function addTxListener(transaction) {
-//     return new Promise((resolve, reject) => {
-//         transaction.addCommitListener((err, transactionId, status, blockNumber) => {
-//             logger.info(`Transaction ID: ${transactionId}, Status: ${status}, Block number: ${blockNumber}`);
-//             if (err) {
-//                 logger.error(err);
-//                 reject(err);
-//             } else {
-//                 if(status != 'VALID') {
-//                     logger.error(`Transaction ID: ${transactionId}, Status: ${status}, Block number: ${blockNumber}`)
-//                     reject(new Error(`Transaction Status is not VAILD`));
-//                 } else {
-//                     resolve();
-//                 }
-//             }
-//         });
-//     })
-// }
