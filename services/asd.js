@@ -14,10 +14,25 @@ function aa () {
     //  for(let i=7011; i<=7080; i++) { 
       let test = jj.hasOwnProperty('blockNumber')
       console.log(test);
-      let key = Object.keys(jj).sort();
-      console.log(key)
+      let key = Object.keys(jj).sort((a,b) => {
+        return a-b; 
+      });
+      // console.log(jj[7463])
+      for(let i=7463; i<=7613; i++) {
+        if(jj[i].transactionIds.length != jj[i].expectedTotal) {
+          console.log('잘모소딘게 있따.')
+          process.exit(1);
+        } else {
+          console.log(i+'번째까지 잘못된게 없음. ')
+        }
+      }
+
       // for(const obj of jj) {
-      //   console.log('obj.blockNumber:'+obj.blockNumber)
+      //   if(obj.transactionIds.length !== obj.expectedTotal) {
+      //     console.log('잘모소딘게 있따.')
+      //   }
+       
       // }
+      // console.log('obj.blockNumber:잘못업)
     //  }
 }

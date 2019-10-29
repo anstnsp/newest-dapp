@@ -11,17 +11,7 @@ const fs                = require('fs');
 const addContractListener          = require('./services/block/addContractListener');
 const PORT = process.env.PORT;
 
-
-
 /**********************  LOG4JS 추가 부분  **********************/
-// Create the log directory if it does not exist
-if (!fs.existsSync(process.env.LOGDIR)) {
-	fs.mkdirSync(process.env.LOGDIR)
-}
-// Create the log directory if it does not exist
-if (!fs.existsSync(process.env.LISTENERLOGDIR)) {
-	fs.mkdirSync(process.env.LISTENERLOGDIR)
-}
 const log4js = require('log4js');
 log4js.configure(__dirname + '/utils/log4js.json');
 const logger = log4js.getLogger('app');
@@ -65,21 +55,12 @@ const server=app.listen(PORT, err =>{
 //SIGKILL(), SIGHUP(user's terminal is disconnected, network,tele connection broken) 
 process.on('SIGINT', function () {
     logger.info('DAPP SERVER IS CLOSED BY <Ctrl + c> !! ');
-    logger.info('DAPP SERVER IS CLOSED BY <Ctrl + c> !! ');
-    logger.info('DAPP SERVER IS CLOSED BY <Ctrl + c> !! ');
-    logger.info('DAPP SERVER IS CLOSED BY <Ctrl + c> !! ');
-    logger.info('DAPP SERVER IS CLOSED BY <Ctrl + c> !! ');
-    
     gracefulCleanJob().then(() => {
         process.exit();
     })
 });
 
 process.on('SIGTERM', function () {
-    logger.info('DAPP SERVER IS NOMALLY CLOSED!! ');
-    logger.info('DAPP SERVER IS NOMALLY CLOSED!! ');
-    logger.info('DAPP SERVER IS NOMALLY CLOSED!! ');
-    logger.info('DAPP SERVER IS NOMALLY CLOSED!! ');
     logger.info('DAPP SERVER IS NOMALLY CLOSED!! ');
     gracefulCleanJob().then(() => {
         logger.info('흐하하')
@@ -99,6 +80,7 @@ const gracefulCleanJob = function() {
         });
         if(eventHub)  eventHub.disconnect();
          // Clean up other resources like DB connections
+         logger.info('Gracefully clean up!!')
         resolve();
       }, 1000);  
     })

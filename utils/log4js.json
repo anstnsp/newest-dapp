@@ -10,7 +10,7 @@
         "daysToKeep": 30,
         "layout": {
           "type": "pattern",
-          "pattern": "%d{yyyy/MM/dd-hh:mm:ss} [%p]  %m%n"
+          "pattern": "%d{yyyy/MM/dd-hh:mm:ss} [%p] (%c)  %m%n"
           
         }
       },
@@ -18,7 +18,7 @@
           "type": "stdout",
           "layout": {
             "type": "pattern",
-            "pattern": "%d{yyyy/MM/dd-hh:mm:ss} [%p]  %m%n"
+            "pattern": "%d{yyyy/MM/dd-hh:mm:ss} [%p] (%c) %m%n"
             
           }
         },
